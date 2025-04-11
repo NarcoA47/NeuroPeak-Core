@@ -57,6 +57,7 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'neuropeak.urls'
+AUTH_USER_MODEL = 'users.User'
 
 TEMPLATES = [
     {

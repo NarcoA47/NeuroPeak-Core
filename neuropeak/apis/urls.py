@@ -37,6 +37,7 @@ urlpatterns = [
         'post': 'create',
         'get': 'list'
     }), name='student-list'),
+    
     path('students/<int:pk>/', StudentProfileViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',

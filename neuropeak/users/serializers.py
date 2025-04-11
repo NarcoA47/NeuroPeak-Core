@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer, TokenRefreshSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import LecturerProfile, StudentProfile
+from .models import LecturerProfile, StudentProfile, User
 
-User = get_user_model()
+# User = get_user_model()
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -42,13 +42,20 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-
+    user_type = serializers.ChoiceField(
+        choices=User.UserType.choices, 
+        default=User.UserType.STUDENT
+    )
+    
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'password', 'user_type']
-        extra_kwargs = {
-            'user_type': {'read_only': True}  # Only admin can set this
-        }
+    
+    def get_fields(self):
+        # Ensure User is fully loaded before accessing UserType
+        # self.fields['user_type'].choices = User.UserType.choices
+        # self.fields['user_type'].default = User.UserType.STUDENT
+        return super().get_fields()
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -59,7 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
             user_type=validated_data.get('user_type', User.UserType.STUDENT)
         )
         return user
-
+    
 class LecturerProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
     first_name = serializers.CharField(source='user.first_name', read_only=True)
