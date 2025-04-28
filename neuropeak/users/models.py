@@ -51,7 +51,7 @@ class User(AbstractUser, PermissionsMixin):
     bio = models.TextField(blank=True, null=True)
     
     # Student-specific fields (nullable)
-    student_id = models.CharField(max_length=20, unique=True, blank=True, null=True)
+    # student_id = models.CharField(max_length=20, unique=True, blank=True, null=True)
     program = models.CharField(max_length=100, blank=True, null=True)
     year_of_study = models.PositiveIntegerField(blank=True, null=True)
     
@@ -88,8 +88,8 @@ class User(AbstractUser, PermissionsMixin):
         # Additional validation
         if self.user_type == self.UserType.LECTURER and not self.department:
             raise ValidationError({'department': 'Department is required for lecturers'})
-        if self.user_type == self.UserType.STUDENT and not self.student_id:
-            raise ValidationError({'student_id': 'Student ID is required for students'})
+        # if self.user_type == self.UserType.STUDENT and not self.student_id:
+        #     raise ValidationError({'student_id': 'Student ID is required for students'})
 
     def clean_user_type_fields(self):
         """Clean up fields based on user type"""
@@ -102,7 +102,7 @@ class User(AbstractUser, PermissionsMixin):
             self.bio = None
             
         if self.user_type != self.UserType.STUDENT:
-            self.student_id = None
+            # self.student_id = None
             self.program = None
             self.year_of_study = None
 
@@ -141,7 +141,7 @@ class StudentProfile(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={'user_type': User.UserType.STUDENT}
     )
-    student_id = models.CharField(max_length=20, unique=True)
+    # student_id = models.CharField(max_length=20, unique=True)
     program = models.CharField(max_length=100)
     year_of_study = models.PositiveIntegerField()
     
@@ -161,7 +161,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         elif instance.user_type == User.UserType.STUDENT:
             StudentProfile.objects.create(
                 user=instance,
-                student_id=instance.student_id,
+                # student_id=instance.student_id,
                 program=instance.program or '',
                 year_of_study=instance.year_of_study or 1
             )

@@ -38,8 +38,8 @@ class LecturerProfileAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class StudentProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'student_id', 'program', 'year_of_study')
-    search_fields = ('user__email', 'user__first_name', 'user__last_name', 'student_id')
+    list_display = ('user', 'program', 'year_of_study')
+    search_fields = ('user__email', 'user__first_name', 'user__last_name')
     list_filter = ('program', 'year_of_study')
     raw_id_fields = ('user',)
     
