@@ -1,6 +1,7 @@
 # urls.py
 from django.urls import path
 from users.views import (UserViewSet,LecturerProfileViewSet,StudentProfileViewSet,CustomTokenObtainPairView,CustomTokenRefreshView)
+from core.views import ChatBotViewSet, CourseViewSet, AssignmentViewSet, QuizViewSet
 
 urlpatterns = [
     # Token endpoints
@@ -44,4 +45,19 @@ urlpatterns = [
         'patch': 'partial_update',
         'delete': 'destroy'
     }), name='student-detail'),
+
+    # Course CRUD
+    path('courses/', CourseViewSet.as_view({'get': 'list', 'post': 'create'}), name='course-list'),
+    path('courses/<int:pk>/', CourseViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='course-detail'),
+
+    # Assignment CRUD
+    path('assignments/', AssignmentViewSet.as_view({'get': 'list', 'post': 'create'}), name='assignment-list'),
+    path('assignments/<int:pk>/', AssignmentViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='assignment-detail'),
+
+    # Quiz CRUD
+    path('quizzes/', QuizViewSet.as_view({'get': 'list', 'post': 'create'}), name='quiz-list'),
+    path('quizzes/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='quiz-detail'),
+
+    # Chatbot
+    path('chatbot/', ChatBotViewSet.as_view({'post': 'create'}), name='chatbot'),
 ]
