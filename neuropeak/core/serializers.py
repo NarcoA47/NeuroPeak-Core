@@ -72,3 +72,8 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "score": attempt.score,
             "wrong_answers": wrong_answers
         })
+
+class QuizQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestion
+        fields = '__all__'

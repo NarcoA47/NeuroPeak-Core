@@ -41,10 +41,21 @@ class ChatMessage(models.Model):
         return f"{self.user.email}: {self.user_message[:30]}"
 
 class QuizQuestion(models.Model):
+    QUESTION_TYPE_CHOICES = [
+        ('MCQ', 'Multiple Choice'),
+        ('TF', 'True/False'),
+    ]
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
     question_text = models.TextField()
-    correct_answer = models.TextField()
-    # Add fields for options if needed
+    question_type = models.CharField(max_length=3, choices=QUESTION_TYPE_CHOICES, default='MCQ')
+    option_a = models.CharField(max_length=255, blank=True, null=True)
+    option_b = models.CharField(max_length=255, blank=True, null=True)
+    option_c = models.CharField(max_length=255, blank=True, null=True)
+    option_d = models.CharField(max_length=255, blank=True, null=True)
+    correct_answer = models.CharField(max_length=10)  # e.g., 'A', 'B', 'C', 'D', 'True', 'False'
+
+    def __str__(self):
+        return self.question_text
 
 class QuizAttempt(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')

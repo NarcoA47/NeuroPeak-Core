@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .models import Course, Assignment, Quiz, QuizAttempt
-from .serializers import CourseSerializer, AssignmentSerializer, QuizSerializer
+from .models import Course, Assignment, Quiz, QuizAttempt, QuizQuestion
+from .serializers import CourseSerializer, AssignmentSerializer, QuizSerializer, QuizQuestionSerializer
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -86,3 +86,17 @@ class ChatBotViewSet(viewsets.ViewSet):
         )
 
         return Response({"reply": reply})
+
+class QuizQuestionViewSet(viewsets.ModelViewSet):
+    queryset = QuizQuestion.objects.all()
+    serializer_class = QuizQuestionSerializer
+
+    def get_queryset(self):
+        quiz_id = self.kwargs.get('quiz_id')
+        if quiz_id:
+            return self.queryset.filter(quiz_id=quiz_id)
+        return self.queryset
+
+    def perform_create(self, serializer):
+        quiz_id = self.kwargs.get('quiz_id')
+        serializer.save(quiz_id=quiz_id)

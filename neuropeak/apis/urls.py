@@ -1,7 +1,7 @@
 # urls.py
 from django.urls import path
 from users.views import (UserViewSet,LecturerProfileViewSet,StudentProfileViewSet,CustomTokenObtainPairView,CustomTokenRefreshView)
-from core.views import ChatBotViewSet, CourseViewSet, AssignmentViewSet, QuizViewSet
+from core.views import ChatBotViewSet, CourseViewSet, AssignmentViewSet, QuizQuestionViewSet, QuizViewSet
 
 urlpatterns = [
     # Token endpoints
@@ -57,7 +57,11 @@ urlpatterns = [
     # Quiz CRUD
     path('quizzes/', QuizViewSet.as_view({'get': 'list', 'post': 'create'}), name='quiz-list'),
     path('quizzes/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='quiz-detail'),
+    path('quizzes/<int:pk>/marking-key/', QuizViewSet.as_view({'get': 'marking_key'}), name='quiz-marking-key'),
 
+    # Quiz Questions CRUD
+    path('quizzes/<int:quiz_id>/questions/', QuizQuestionViewSet.as_view({'get': 'list', 'post': 'create'}), name='quiz-question-list'),
+    path('quizzes/<int:quiz_id>/questions/<int:pk>/', QuizQuestionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='quiz-question-detail'),
     # Chatbot
     path('chatbot/', ChatBotViewSet.as_view({'post': 'create'}), name='chatbot'),
 ]
